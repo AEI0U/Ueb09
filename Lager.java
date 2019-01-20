@@ -183,9 +183,25 @@ public class Lager{
    * @return bestandsListe des Lagers
    */
   public String ausgebenBestandsListe(){
-      //muss noch geschrieben werden.
-      StringBuilder string = new StringBuilder();
-      return string.toString();
+        String bestandsListe = "";
+        double insgesamt = 0;
+        bestandsListe += "\nLagerort: ";
+        bestandsListe += "\n\nArtNr  Beschreibung                                  Preis    Bestand  Gesamt   ";
+        bestandsListe += "\n================================================================================";
+        for (int i = 0; i <= index; i++) {
+            bestandsListe += String.format("\n%-6d ",lager[i].getNummer());
+            bestandsListe += String.format("%-45s ",lager[i].getBezeichnung());
+            bestandsListe += String.format("%-7.2f ",lager[i].getPreis());
+            bestandsListe += String.format("  %-7d ",lager[i].getBestand());
+            double gesamt = lager[i].getPreis() * lager[i].getBestand();
+            insgesamt += gesamt;
+            bestandsListe += String.format("%-9.2f ",gesamt);
+            bestandsListe += "\n";
+        }    
+        bestandsListe += "================================================================================\n";
+        bestandsListe += String.format("Gesamtwert:                                                            %.2f\n",insgesamt);
+        return bestandsListe;
+
     }
 
   /**
