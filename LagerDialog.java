@@ -189,7 +189,7 @@ public class LagerDialog{
             nummer = readlnInt("\nArtikelNummer eingeben: ");
             System.out.print("\nArtikelBezeichnung eingeben: ");
             bezeichnung = input.nextLine();
-            bestand = readlnInt("\nArtikelBestand eingeben: ");
+            bestand = readlnInt("ArtikelBestand eingeben: ");
             preis = readlnDouble("\nPreis eingeben: ");
             String s = Integer.toString(nummer);
             check (((nummer >= 0000) && (nummer <= 9999)&&(s.length()==4)),MSG_NUMMER);
@@ -201,9 +201,9 @@ public class LagerDialog{
                 case BUCH:
                     System.out.print("\nAutor eingeben: ");
                     autor = input.next();
-                    System.out.print("\nTitel eingeben: ");
+                    System.out.print("Titel eingeben: ");
                         titel = input.next();
-                        System.out.print("\nVerlag eingeben: ");
+                        System.out.print("Verlag eingeben: ");
                         verlag =  input.next();
                         lager.anlegenArtikel(new Buch(nummer, bezeichnung, bestand, preis, autor, titel, verlag));
                         break;
@@ -211,16 +211,16 @@ public class LagerDialog{
                     case CD:
                         System.out.print("\nInterpret eingeben: ");
                         artist = input.next();
-                        System.out.print("\nTitel eingeben: ");
+                        System.out.print("Titel eingeben: ");
                         titel = input.next();
-                        anzahl= readlnInt("\nAnzahl der Musiktitel eingeben: ");
+                        anzahl= readlnInt("Anzahl der Musiktitel eingeben: ");
                         lager.anlegenArtikel(new Cd(nummer, bezeichnung, bestand, preis, artist, titel, anzahl));
                         break;
             
                     case VIDEO:
                         System.out.print("\nTitel eingeben: ");
                         titel = input.next();
-                        dauer = readlnDouble("\nSpieldauer eingeben: ");
+                        dauer = readlnDouble("Spieldauer eingeben: ");
                         jahr = readlnInt("\nErscheinungsjahr eingeben: ");
                         lager.anlegenArtikel(new Video(nummer, bezeichnung, bestand, preis, titel, dauer, jahr));
                         break;
