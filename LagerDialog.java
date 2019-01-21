@@ -22,8 +22,12 @@ public class LagerDialog{
     private final int BESTANDSAENDERUNG =3;
     private final int PREIS =4;
     private final int BESTANDSLISTE =5;
-    private final int LAGER_LOESCHEN =6;
-
+    private final int LAGER_ANZEIGEN =6;
+    private final int LAGER_LOESCHEN =7;
+    private final int BUCH=1;
+    private final int CD=2;
+    private final int VIDEO=3;
+    
     private final int NR_MIN =0;
     private final int NR_MAX =9999;
     private final int MIN_BESTAND = 0;
@@ -49,7 +53,7 @@ public class LagerDialog{
      * 
      */
     public void run(){
-        int wahl=1;
+        int wahl=-1;
         try{
             while (wahl != ENDE){
                 
@@ -87,7 +91,7 @@ public class LagerDialog{
                             break;
 
                          case ARTIKEL_ZUFUEGEN:
-                            lager.anlegenArtikel(artikelNeu());
+                            anlegenArtikel();
                             break;
                                 
                          case LAGER_LOESCHEN:
@@ -106,7 +110,7 @@ public class LagerDialog{
                         "\n 3 = Bestandsaenderung eines Artikels buchen"+
                         "\n 4 = Preisaenderung"+
                         "\n 5 = BestandsListe ausgeben"+
-                        "\n 6 = Lager ausfloesen"+
+                        "\n 6 = Lager aufloesen"+
                         "\n 0 = Ende\n");
 
                     switch (wahl){
@@ -115,7 +119,8 @@ public class LagerDialog{
                             break;
 
                         case ARTIKEL_ZUFUEGEN:
-                            lager.anlegenArtikel(artikelNeu());
+                            anlegenArtikel();
+                            
                             break;
 
                         case ARTIKEL_ENTFERNEN:
@@ -159,7 +164,84 @@ public class LagerDialog{
             System.err.println(rex);
         }
     }
-
+    
+    /**
+     * anlegenArtikel() legt einen Artikel basierend auf dem ausgewaehlten Artikeltyps (Buch, Cd oder Video) im Lager an.
+     */
+    public void anlegenArtikel(){
+        int wahl=-1;
+        Artikel artikel;
+        int     anzahl;
+        int     bestand;
+        int     jahr;
+        int     nummer;
+        double  dauer;
+        double  preis;
+        String  artist;
+        String  autor;
+        String  bezeichnung;
+        String  titel;
+        String  verlag;
+        
+        try{
+            System.out.println("\nBitte waehlen Sie aus: ");
+            wahl = readlnInt("\n 1 = Buch ins Lager zufuegen"+ "\n 2 = Cd ins Lager zufuegen"+ "\n 3 = Video ins Lager zufuegen");
+            nummer = readlnInt("\nArtikelNummer eingeben: ");
+            System.out.print("\nArtikelBezeichnung eingeben: ");
+            bezeichnung = input.nextLine();
+            bestand = readlnInt("\nArtikelBestand eingeben: ");
+            preis = readlnDouble("\nPreis eingeben: ");
+            String s = Integer.toString(nummer);
+            check (((nummer >= 0000) && (nummer <= 9999)&&(s.length()==4)),MSG_NUMMER);
+            check (((!bezeichnung.trim().equals("") && bezeichnung != null)), MSG_BEZEICHNUNG);
+            check ((bestand >=MIN_BESTAND),MSG_POSITIVER_WERT);
+            check((preis>=0),MSG_POSITIVER_WERT);
+            
+            switch (wahl){
+                case BUCH:
+                    System.out.print("\nAutor eingeben: ");
+                    autor = input.next();
+                    System.out.print("\nTitel eingeben: ");
+                        titel = input.next();
+                        System.out.print("\nVerlag eingeben: ");
+                        verlag =  input.next();
+                        lager.anlegenArtikel(new Buch(nummer, bezeichnung, bestand, preis, autor, titel, verlag));
+                        break;
+            
+                    case CD:
+                        System.out.print("\nInterpret eingeben: ");
+                        artist = input.next();
+                        System.out.print("\nTitel eingeben: ");
+                        titel = input.next();
+                        anzahl= readlnInt("\nAnzahl der Musiktitel eingeben: ");
+                        lager.anlegenArtikel(new Cd(nummer, bezeichnung, bestand, preis, artist, titel, anzahl));
+                        break;
+            
+                    case VIDEO:
+                        System.out.print("\nTitel eingeben: ");
+                        titel = input.next();
+                        dauer = readlnDouble("\nSpieldauer eingeben: ");
+                        jahr = readlnInt("\nErscheinungsjahr eingeben: ");
+                        lager.anlegenArtikel(new Video(nummer, bezeichnung, bestand, preis, titel, dauer, jahr));
+                        break;
+                    }
+                
+            }
+            catch (AssertionError ae){
+                System.err.println(ae);
+            } 
+            catch ( NumberFormatException nfe){
+                System.err.println(nfe);                           
+            }       
+            catch (RuntimeException rex){
+                System.err.println(rex);
+            }
+    }
+             
+   
+    
+    
+    
     /**
      * readOrt: Methode zum Einlesen des Lagerortes
      * @return Lagerort als String
@@ -178,32 +260,6 @@ public class LagerDialog{
     private int readGroesse(){
         int groesse;
         return readlnInt("Lagergroesse des neuen Lagers eingeben: ");
-    }
-
-    /**
-     * artikelNeu: Methode zum Anlegen eines Artikels, der dann ins Lager eingefuegt wird
-     * @return Artikel artikel
-     */
-    private Artikel artikelNeu(){
-        Artikel artikel;
-        int nummer;
-        String bezeichnung;
-        int bestand;
-        double preis;
-
-        nummer = readlnInt("ArtikelNummer eingeben: ");
-        System.out.print("ArtikelBezeichnung eingeben: ");
-        bezeichnung = input.nextLine();
-        bestand = readlnInt("ArtikelBestand eingeben: ");
-        preis = readlnDouble("Preis eingeben: ");
-        String s = Integer.toString(nummer);
-        check (((nummer >= 0000) && (nummer <= 9999)&&(s.length()==4)),MSG_NUMMER);
-        check (((!bezeichnung.trim().equals("") && bezeichnung != null)), MSG_BEZEICHNUNG);
-        check ((bestand >=MIN_BESTAND),MSG_POSITIVER_WERT);
-        check((preis>=0),MSG_POSITIVER_WERT);
-        artikel = new Artikel(nummer, bezeichnung, bestand, preis);
-
-        return artikel;
     }
 
     /**
@@ -272,7 +328,7 @@ public class LagerDialog{
         } 
         return wert;
     }
-
+    
     /**
      * Check-Methode um Fehler zu erkennen und als 
      * IllegalArgumentException auszuwerfen.
